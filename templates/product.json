@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "enhancer_demo": {
+      "type": "product-enhancer-demo",
+      "settings": {
+        "heading": "Enhance This Product",
+        "description": "Simulate how your Digital Product Enhancer app can generate and apply better product copy.",
+        "button_text": "Generate AI Description"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "enhancer_demo"
+  ]
+}

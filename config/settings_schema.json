@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Theme settings",
+    "settings": [
+      {
+        "type": "text",
+        "id": "theme_tagline",
+        "label": "Theme tagline",
+        "default": "Digital Product Enhancer Demo Theme"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Accent color",
+        "default": "#0ea5e9"
+      }
+    ]
+  }
+]

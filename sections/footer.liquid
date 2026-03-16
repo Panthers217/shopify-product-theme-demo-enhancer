@@ -1,0 +1,48 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="container site-footer__inner">
+    <div class="site-footer__name">
+      {{ section.settings.store_name | default: shop.name }}
+    </div>
+
+    {% if section.settings.menu != blank %}
+      <ul class="site-footer__menu">
+        {% for link in section.settings.menu.links %}
+          <li>
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="site-footer__meta">
+      {{ section.settings.footer_text }}
+      <br>
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "store_name",
+      "label": "Store name",
+      "default": "Digital Product Enhancer Demo"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Footer menu"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_text",
+      "label": "Footer text",
+      "default": "Built with Shopify Online Store 2.0 for portfolio demonstration."
+    }
+  ]
+}
+{% endschema %}

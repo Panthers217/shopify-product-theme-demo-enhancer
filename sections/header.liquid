@@ -1,0 +1,60 @@
+<header class="site-header" role="banner">
+  <div class="container site-header__inner">
+    <a class="site-logo" href="{{ routes.root_url }}">
+      {% if section.settings.logo != blank %}
+        {{ section.settings.logo | image_url: width: 220 | image_tag: alt: shop.name, loading: 'lazy' }}
+      {% else %}
+        {{ section.settings.store_title | default: shop.name }}
+      {% endif %}
+    </a>
+
+    <button class="header-toggle" type="button" data-nav-toggle aria-label="Toggle navigation" aria-expanded="false">
+      <span>Menu</span>
+    </button>
+
+    <nav class="site-nav" data-mobile-nav>
+      <ul class="site-nav__list">
+        {% for link in section.settings.menu.links %}
+          <li>
+            <a
+              class="site-nav__link {% if link.current %}site-nav__link--active{% endif %}"
+              href="{{ link.url }}"
+            >
+              {{ link.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <a class="header-cart" href="{{ routes.cart_url }}" aria-label="Cart">
+      <span>Cart</span>
+      <span class="header-cart__count">{{ cart.item_count }}</span>
+    </a>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "store_title",
+      "label": "Store title fallback",
+      "default": "Digital Product Enhancer"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

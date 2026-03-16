@@ -1,0 +1,61 @@
+<section class="product-enhancer">
+  <div class="container">
+    <div class="enhancer-card">
+      <h2 class="section-heading">{{ section.settings.heading }}</h2>
+      <p class="section-subheading">{{ section.settings.description }}</p>
+
+      {% assign output_id = 'enhancer-output-' | append: section.id %}
+
+      <button
+        class="btn btn--secondary"
+        type="button"
+        data-enhancer-trigger
+        data-product-id="{{ product.id }}"
+        data-output-target="{{ output_id }}"
+      >
+        {{ section.settings.button_text }}
+      </button>
+
+      <div id="{{ output_id }}" class="enhancer-result" aria-live="polite">
+        Waiting for action.
+      </div>
+
+      <!--
+        Future app integration:
+        This section is where the Digital Product Enhancer app can inject or request
+        generated product content from an app endpoint, then update this output area.
+      -->
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product enhancer demo",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Enhance This Product"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Demonstrates where your Digital Product Enhancer app can trigger AI-powered product improvements."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Generate AI Description"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product enhancer demo"
+    }
+  ]
+}
+{% endschema %}

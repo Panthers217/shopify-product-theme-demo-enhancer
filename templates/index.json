@@ -1,0 +1,62 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "title": "Digital products that scale your creative workflow",
+        "subtitle": "Sell templates, assets, and AI-powered tools with a flexible Shopify Online Store 2.0 setup.",
+        "cta_text": "Shop Now",
+        "cta_link": "shopify://collections/all"
+      }
+    },
+    "featured_products": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "Featured Digital Products",
+        "description": "A curated list of tools and downloadable assets.",
+        "products_to_show": 6,
+        "button_text": "View Product"
+      }
+    },
+    "value_props": {
+      "type": "value-props",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "title": "Instant Delivery",
+            "text": "Files are available right after purchase."
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "title": "Creator Focused",
+            "text": "Built for designers, developers, and digital teams."
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "title": "AI-Enhanced Workflow",
+            "text": "Prepare your catalog for intelligent product enhancements."
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3"
+      ],
+      "settings": {
+        "heading": "Why this digital store works",
+        "subheading": "A clean, conversion-focused layout with app-integration readiness."
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "featured_products",
+    "value_props"
+  ]
+}

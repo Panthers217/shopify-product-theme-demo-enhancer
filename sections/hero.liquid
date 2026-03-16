@@ -1,0 +1,60 @@
+<section class="hero">
+  <div class="container">
+    <div
+      class="hero__panel {% if section.settings.background_image != blank %}has-image{% endif %}"
+      {% if section.settings.background_image != blank %}
+        style="background-image: url('{{ section.settings.background_image | image_url: width: 1800 }}');"
+      {% endif %}
+    >
+      <div class="hero__content">
+        <h1 class="hero__title">{{ section.settings.title }}</h1>
+        <p class="hero__subtitle">{{ section.settings.subtitle }}</p>
+
+        {% if section.settings.cta_text != blank and section.settings.cta_link != blank %}
+          <a class="btn" href="{{ section.settings.cta_link }}">{{ section.settings.cta_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Launch better digital products faster"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Showcase templates, downloads, and AI-enhanced assets with a modern storefront experience."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA button text",
+      "default": "Browse Products"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}

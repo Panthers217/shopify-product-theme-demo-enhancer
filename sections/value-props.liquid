@@ -1,0 +1,78 @@
+<section class="value-props">
+  <div class="container">
+    <h2 class="section-heading">{{ section.settings.heading }}</h2>
+    <p class="section-subheading">{{ section.settings.subheading }}</p>
+
+    {% if section.blocks.size > 0 %}
+      <div class="value-props__grid">
+        {% for block in section.blocks %}
+          <article class="value-prop-card" {{ block.shopify_attributes }}>
+            <h3>{{ block.settings.title }}</h3>
+            <p>{{ block.settings.text }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        Add feature blocks in the Theme Editor to highlight your store value.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Value props",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why customers choose this store"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Use this section to explain what makes your digital products worth buying."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature title",
+          "default": "Instant Access"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Feature text",
+          "default": "Customers get immediate downloads after checkout."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Value props",
+      "blocks": [
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
