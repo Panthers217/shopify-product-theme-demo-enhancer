@@ -1,0 +1,35 @@
+<section class="main-collection">
+  <div class="container">
+    <h1 class="section-heading">{{ collection.title }}</h1>
+
+    {% if collection.description != blank %}
+      <div class="section-subheading rte">{{ collection.description }}</div>
+    {% endif %}
+
+    {% if collection.products_count > 0 %}
+      <div class="product-grid">
+        {% for product in collection.products %}
+          {% render 'product-card', product: product, button_text: section.settings.button_text %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        No products found in this collection yet.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "View Product"
+    }
+  ]
+}
+{% endschema %}

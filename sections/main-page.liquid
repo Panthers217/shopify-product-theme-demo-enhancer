@@ -1,0 +1,34 @@
+<section class="main-page">
+  <div class="container">
+    {% if section.settings.show_page_title %}
+      <h1 class="section-heading">{{ page.title }}</h1>
+    {% endif %}
+
+    {% if section.settings.intro_text != blank %}
+      <div class="section-subheading rte">{{ section.settings.intro_text }}</div>
+    {% endif %}
+
+    <div class="rte">
+      {{ page.content }}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_page_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "intro_text",
+      "label": "Intro text"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "title": "About This Theme Demo",
+        "subtitle": "A Shopify Online Store 2.0 build focused on digital products and app-ready storefront architecture.",
+        "cta_text": "Browse Products",
+        "cta_link": "shopify://collections/all"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "show_page_title": false,
+        "intro_text": "<p>Share your story, mission, and the problem your digital products solve.<\/p>"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "main"
+  ]
+}
+
+
+

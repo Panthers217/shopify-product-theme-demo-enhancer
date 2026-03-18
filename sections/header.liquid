@@ -12,9 +12,14 @@
       <span>Menu</span>
     </button>
 
+    {% assign nav_links = linklists['enhancer'].links %}
+    {% if nav_links == blank and section.settings.menu != blank %}
+      {% assign nav_links = section.settings.menu.links %}
+    {% endif %}
+
     <nav class="site-nav" data-mobile-nav>
       <ul class="site-nav__list">
-        {% for link in section.settings.menu.links %}
+        {% for link in nav_links %}
           <li>
             <a
               class="site-nav__link {% if link.current %}site-nav__link--active{% endif %}"
@@ -52,8 +57,7 @@
     {
       "type": "link_list",
       "id": "menu",
-      "label": "Navigation menu",
-      "default": "main-menu"
+      "label": "Navigation menu"
     }
   ]
 }

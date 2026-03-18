@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "contact": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Contact",
+        "description": "Questions about setup, integrations, or the Product Enhancer demo? Send a message.",
+        "button_text": "Send message"
+      }
+    }
+  },
+  "order": [
+    "contact"
+  ]
+}

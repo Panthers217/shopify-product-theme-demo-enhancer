@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "button_text": "View Product"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

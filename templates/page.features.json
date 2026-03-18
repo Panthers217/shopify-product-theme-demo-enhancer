@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "title": "Product Enhancer Features",
+        "subtitle": "Showcase AI-assisted product copy improvements, workflow speed, and merchandising consistency.",
+        "cta_text": "Try It on a Product",
+        "cta_link": "/collections/all"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "show_page_title": false,
+        "intro_text": "<p>Use this page to explain feature highlights, before/after examples, and how the enhancer fits your product workflow.<\/p>"
+      }
+    },
+    "value_props": {
+      "type": "value-props",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "title": "One-click copy suggestions",
+            "text": "Generate stronger product descriptions from your existing catalog data."
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "title": "Consistent brand voice",
+            "text": "Keep messaging aligned with your tone across every listing."
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "title": "Faster publishing",
+            "text": "Reduce time spent rewriting product content manually."
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3"
+      ],
+      "settings": {
+        "heading": "What the enhancer does",
+        "subheading": "Practical capabilities for conversion-focused product pages."
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "main",
+    "value_props"
+  ]
+}
