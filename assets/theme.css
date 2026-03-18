@@ -374,6 +374,10 @@ a {
   flex-wrap: wrap;
 }
 
+.site-footer__menu--blocks {
+  margin-top: 4px;
+}
+
 .site-footer__meta {
   color: var(--color-muted);
   font-size: 0.92rem;

@@ -14,6 +14,21 @@
       </ul>
     {% endif %}
 
+    {% if section.blocks.size > 0 %}
+      <ul class="site-footer__menu site-footer__menu--blocks">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'footer_link' %}
+              {% if block.settings.label != blank and block.settings.url != blank %}
+                <li {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.url }}">{{ block.settings.label }}</a>
+                </li>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+
     <div class="site-footer__meta">
       {{ section.settings.footer_text }}
       <br>
@@ -43,6 +58,26 @@
       "label": "Footer text",
       "default": "Built with Shopify Online Store 2.0 for portfolio demonstration."
     }
-  ]
+  ],
+  "blocks": [
+    {
+      "type": "footer_link",
+      "name": "Footer link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Link label",
+          "default": "Support"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8
 }
 {% endschema %}
