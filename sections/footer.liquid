@@ -1,30 +1,84 @@
 <footer class="site-footer" role="contentinfo">
   <div class="container site-footer__inner">
-    <div class="site-footer__name">
-      {{ section.settings.store_name | default: shop.name }}
+    <div class="site-footer__grid">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'footer_column' %}
+            {% assign column_menu = block.settings.menu %}
+            <section class="site-footer__column" {{ block.shopify_attributes }}>
+              {% if block.settings.heading != blank %}
+                <h2 class="site-footer__heading">{{ block.settings.heading }}</h2>
+              {% endif %}
+              {% if column_menu != blank %}
+                <ul class="site-footer__links">
+                  {% for link in column_menu.links %}
+                    <li>
+                      <a href="{{ link.url }}">{{ link.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </section>
+
+          {% when 'newsletter_social' %}
+            {% assign social_menu = block.settings.social_menu %}
+            <section class="site-footer__column site-footer__column--newsletter" {{ block.shopify_attributes }}>
+              {% if block.settings.heading != blank %}
+                <h2 class="site-footer__heading">{{ block.settings.heading }}</h2>
+              {% endif %}
+              {% if block.settings.subtext != blank %}
+                <p class="site-footer__newsletter-copy">{{ block.settings.subtext }}</p>
+              {% endif %}
+
+              {% form 'customer', class: 'site-footer__newsletter-form' %}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <label class="visually-hidden" for="FooterEmail-{{ section.id }}">Email</label>
+                <input
+                  id="FooterEmail-{{ section.id }}"
+                  type="email"
+                  name="contact[email]"
+                  value="{% if customer %}{{ customer.email }}{% endif %}"
+                  placeholder="{{ block.settings.email_placeholder | default: 'Enter your email' }}"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  autocomplete="email"
+                  required
+                >
+                <button type="submit">{{ block.settings.button_label | default: 'Subscribe' }}</button>
+              {% endform %}
+
+              {% if social_menu != blank %}
+                <ul class="site-footer__socials">
+                  {% for link in social_menu.links %}
+                    <li>
+                      <a href="{{ link.url }}" aria-label="{{ link.title }}">
+                        {{ link.title | slice: 0, 2 | upcase }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </section>
+        {% endcase %}
+      {% endfor %}
     </div>
 
-    {% if section.settings.menu != blank %}
-      <ul class="site-footer__menu">
-        {% for link in section.settings.menu.links %}
-          <li>
-            <a href="{{ link.url }}">{{ link.title }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+    {% assign has_legacy_links = false %}
+    {% for block in section.blocks %}
+      {% if block.type == 'footer_link' and block.settings.label != blank and block.settings.url != blank %}
+        {% assign has_legacy_links = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
 
-    {% if section.blocks.size > 0 %}
-      <ul class="site-footer__menu site-footer__menu--blocks">
+    {% if has_legacy_links %}
+      <ul class="site-footer__legacy-links">
         {% for block in section.blocks %}
-          {% case block.type %}
-            {% when 'footer_link' %}
-              {% if block.settings.label != blank and block.settings.url != blank %}
-                <li {{ block.shopify_attributes }}>
-                  <a href="{{ block.settings.url }}">{{ block.settings.label }}</a>
-                </li>
-              {% endif %}
-          {% endcase %}
+          {% if block.type == 'footer_link' and block.settings.label != blank and block.settings.url != blank %}
+            <li {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.url }}">{{ block.settings.label }}</a>
+            </li>
+          {% endif %}
         {% endfor %}
       </ul>
     {% endif %}
@@ -42,17 +96,6 @@
   "name": "Footer",
   "settings": [
     {
-      "type": "text",
-      "id": "store_name",
-      "label": "Store name",
-      "default": "Digital Product Enhancer Demo"
-    },
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Footer menu"
-    },
-    {
       "type": "textarea",
       "id": "footer_text",
       "label": "Footer text",
@@ -60,6 +103,59 @@
     }
   ],
   "blocks": [
+    {
+      "type": "footer_column",
+      "name": "Footer column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Column heading",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "newsletter_social",
+      "name": "Newsletter and social",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Newsletter"
+        },
+        {
+          "type": "textarea",
+          "id": "subtext",
+          "label": "Subtext",
+          "default": "Subscribe to get special offers and updates"
+        },
+        {
+          "type": "text",
+          "id": "email_placeholder",
+          "label": "Email placeholder",
+          "default": "Enter your email"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Subscribe"
+        },
+        {
+          "type": "link_list",
+          "id": "social_menu",
+          "label": "Social links menu"
+        }
+      ]
+    },
     {
       "type": "footer_link",
       "name": "Footer link",
@@ -78,6 +174,25 @@
       ]
     }
   ],
-  "max_blocks": 8
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        {
+          "type": "footer_column"
+        },
+        {
+          "type": "footer_column"
+        },
+        {
+          "type": "footer_column"
+        },
+        {
+          "type": "newsletter_social"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

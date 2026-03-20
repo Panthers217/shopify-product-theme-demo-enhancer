@@ -1,0 +1,204 @@
+<section class="collection-products">
+  <div class="container">
+    {% if collection.products_count > 0 %}
+      <div class="collection-products__stats">
+        <p class="products-count">
+          Showing 
+          <strong>{{ collection.products | size }}</strong> 
+          of 
+          <strong>{{ collection.products_count }}</strong> 
+          {{ collection.products_count | pluralize: 'product', 'products' }}
+        </p>
+      </div>
+
+      <div class="product-grid" data-products-grid>
+        {% for product in collection.products %}
+          {% render 'product-card', product: product, button_text: section.settings.button_text %}
+        {% endfor %}
+      </div>
+
+      {% if section.settings.show_pagination and paginate.pages > 1 %}
+        <div class="pagination">
+          {% if paginate.previous %}
+            <a href="{{ paginate.previous.url }}" class="pagination-link pagination-prev">
+              ← Previous
+            </a>
+          {% endif %}
+
+          {% for page in (1..paginate.pages) %}
+            {% if page == paginate.current_page %}
+              <span class="pagination-item pagination-current">{{ page }}</span>
+            {% else %}
+              <a href="{{ paginate.url | replace: '__path__', forloop.index }}" class="pagination-link">
+                {{ page }}
+              </a>
+            {% endif %}
+          {% endfor %}
+
+          {% if paginate.next %}
+            <a href="{{ paginate.next.url }}" class="pagination-link pagination-next">
+              Next →
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-state__icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 6H4M9 11V17M15 11V17M5 6L7 18C7.1 19.1 8 20 9.1 20H14.9C16 20 16.9 19.1 17 18L19 6M9 6V5C9 3.9 9.9 3 11 3H13C14.1 3 15 3.9 15 5V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="empty-state__title">No products found</h3>
+        <p class="empty-state__text">Try adjusting your filters or search terms.</p>
+        <a href="{{ collection.url }}" class="btn btn-primary">Clear filters</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .collection-products {
+    padding: 3rem 0;
+  }
+
+  .collection-products__stats {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .products-count {
+    font-size: 0.875rem;
+    color: var(--text-secondary, #64748b);
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .pagination-link,
+  .pagination-item {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    text-decoration: none;
+    color: var(--text-primary, #0f172a);
+    transition: all 0.2s;
+  }
+
+  .pagination-link:hover {
+    background-color: var(--bg-secondary, #f8fafc);
+    border-color: var(--accent-color, #0ea5e9);
+    color: var(--accent-color, #0ea5e9);
+  }
+
+  .pagination-current {
+    background-color: var(--accent-color, #0ea5e9);
+    color: white;
+    border-color: var(--accent-color, #0ea5e9);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--bg-secondary, #f8fafc);
+    border-radius: 12px;
+  }
+
+  .empty-state__icon {
+    margin-bottom: 1rem;
+    color: var(--text-tertiary, #94a3b8);
+  }
+
+  .empty-state__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-state__text {
+    color: var(--text-secondary, #64748b);
+    margin-bottom: 1.5rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background-color: var(--accent-color, #0ea5e9);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-dark, #0284c7);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .pagination {
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .pagination-link,
+    .pagination-item {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Product button text",
+      "default": "View Product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show pagination",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

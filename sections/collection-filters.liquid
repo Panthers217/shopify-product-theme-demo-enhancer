@@ -1,0 +1,350 @@
+<section class="collection-filters">
+  <div class="container collection-filters__inner">
+    <div class="filters-header">
+      <h2 class="filters-title">Filter & Sort</h2>
+      {% if section.settings.show_filters_toggle %}
+        <button class="filters-toggle" type="button" data-filters-toggle aria-label="Toggle filters" aria-expanded="false">
+          <span>Show Filters</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 6.5H3M10.5 10H5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+
+    <div class="filters-content" data-filters-content>
+      {% if collection.filters != blank %}
+        <div class="filters-group">
+          {% for filter in collection.filters %}
+            <details class="filter-item">
+              <summary class="filter-header">
+                <span class="filter-title">{{ filter.label }}</span>
+                <span class="filter-icon">+</span>
+              </summary>
+              
+              <div class="filter-options">
+                {% for option in filter.values %}
+                  <label class="filter-option">
+                    <input 
+                      type="checkbox" 
+                      name="{{ filter.param_name }}" 
+                      value="{{ option.value }}"
+                      {% if option.active %}checked{% endif %}
+                    >
+                    <span class="filter-label">{{ option.label }}</span>
+                    {% if option.count %}
+                      <span class="filter-count">({{ option.count }})</span>
+                    {% endif %}
+                  </label>
+                {% endfor %}
+              </div>
+            </details>
+          {% endfor %}
+        </div>
+
+        <div class="filters-actions">
+          <button class="btn btn-primary btn-filter-apply" type="button" data-apply-filters>
+            Apply Filters
+          </button>
+          {% if collection.current_filters != blank %}
+            <a class="btn btn-secondary" href="{{ collection.url }}">Clear all</a>
+          {% endif %}
+        </div>
+      {% else %}
+        <p class="filters-empty">No filters available for this collection.</p>
+      {% endif %}
+
+      {% if section.settings.show_sort %}
+        <div class="sort-controls">
+          <label for="sort-by" class="sort-label">Sort by:</label>
+          <select id="sort-by" class="sort-select" data-sort-by>
+            <option value="">Featured</option>
+            <option value="best-selling" {% if collection.sort_by == 'best-selling' %}selected{% endif %}>Best selling</option>
+            <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>Title (A-Z)</option>
+            <option value="title-descending" {% if collection.sort_by == 'title-descending' %}selected{% endif %}>Title (Z-A)</option>
+            <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price (Low to High)</option>
+            <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price (High to Low)</option>
+            <option value="created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
+          </select>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection-filters {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 2rem 0;
+  }
+
+  .collection-filters__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .filters-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .filters-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--text-secondary, #64748b);
+  }
+
+  .filters-content {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .filters-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .filter-header {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8fafc;
+    user-select: none;
+    gap: 0.5rem;
+  }
+
+  .filter-header:hover {
+    background-color: #eef2f5;
+  }
+
+  .filter-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .filter-icon {
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+  }
+
+  .filter-item[open] .filter-icon {
+    transform: rotate(45deg);
+  }
+
+  .filter-options {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .filter-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+
+  .filter-option input {
+    cursor: pointer;
+  }
+
+  .filter-label {
+    flex: 1;
+  }
+
+  .filter-count {
+    color: var(--text-tertiary, #94a3b8);
+    font-size: 0.75rem;
+  }
+
+  .filters-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .filters-empty {
+    color: var(--text-secondary, #64748b);
+    font-size: 0.875rem;
+  }
+
+  .sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  .sort-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .sort-select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background-color: var(--accent-color, #0ea5e9);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-dark, #0284c7);
+  }
+
+  .btn-secondary {
+    background-color: #e2e8f0;
+    color: var(--text-primary, #0f172a);
+  }
+
+  .btn-secondary:hover {
+    background-color: #cbd5e1;
+  }
+
+  @media (max-width: 768px) {
+    .filters-toggle {
+      display: flex;
+    }
+
+    .filters-content {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      padding: 1rem 0;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 1rem;
+    }
+
+    .filters-content[data-expanded="true"] {
+      display: flex;
+    }
+
+    .filters-group {
+      width: 100%;
+    }
+
+    .sort-controls {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .filters-actions {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterToggle = document.querySelector('[data-filters-toggle]');
+    const filtersContent = document.querySelector('[data-filters-content]');
+    const sortSelect = document.querySelector('[data-sort-by]');
+
+    if (filterToggle) {
+      filterToggle.addEventListener('click', function() {
+        const isExpanded = filtersContent.getAttribute('data-expanded') === 'true';
+        filtersContent.setAttribute('data-expanded', !isExpanded);
+        filterToggle.setAttribute('aria-expanded', !isExpanded);
+      });
+    }
+
+    if (sortSelect) {
+      sortSelect.addEventListener('change', function() {
+        const sortValue = this.value;
+        const currentUrl = new URL(window.location);
+        if (sortValue) {
+          currentUrl.searchParams.set('sort_by', sortValue);
+        } else {
+          currentUrl.searchParams.delete('sort_by');
+        }
+        window.location.href = currentUrl.toString();
+      });
+    }
+
+    const applyFiltersBtn = document.querySelector('[data-apply-filters]');
+    if (applyFiltersBtn) {
+      applyFiltersBtn.addEventListener('click', function() {
+        // Collect checked filters and update URL
+        const checkboxes = document.querySelectorAll('.filter-option input:checked');
+        const params = new URLSearchParams(window.location.search);
+        
+        // Clear existing filter params
+        for (let key of params.keys()) {
+          if (key !== 'sort_by') {
+            params.delete(key);
+          }
+        }
+
+        checkboxes.forEach(checkbox => {
+          params.append(checkbox.name, checkbox.value);
+        });
+
+        window.location.href = window.location.pathname + '?' + params.toString();
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection filters",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_filters_toggle",
+      "label": "Show filters toggle on mobile",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Show sort options",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

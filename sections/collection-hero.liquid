@@ -1,0 +1,125 @@
+<section class="collection-hero" style="{% if section.settings.bg_color != blank %}background-color: {{ section.settings.bg_color }};{% endif %}">
+  <div class="container collection-hero__inner">
+    <div class="collection-hero__content">
+      <h1 class="collection-hero__title">{{ collection.title }}</h1>
+      
+      {% if collection.description != blank %}
+        <div class="collection-hero__description rte">
+          {{ collection.description }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_count %}
+        <p class="collection-hero__count">
+          {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if section.settings.hero_image != blank %}
+      <div class="collection-hero__image">
+        {{ section.settings.hero_image | image_url: width: 500 | image_tag: 
+          alt: collection.title, 
+          loading: 'eager',
+          sizes: "(max-width: 768px) 100vw, 500px"
+        }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .collection-hero {
+    padding: 4rem 2rem;
+    background-color: var(--bg-secondary, #f8fafc);
+  }
+
+  .collection-hero__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .collection-hero__content {
+    max-width: 600px;
+  }
+
+  .collection-hero__title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .collection-hero__description {
+    font-size: 1.125rem;
+    color: var(--text-secondary, #64748b);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .collection-hero__count {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-tertiary, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .collection-hero__image {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .collection-hero__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .collection-hero__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .collection-hero__title {
+      font-size: 2rem;
+    }
+
+    .collection-hero__image {
+      height: 300px;
+    }
+
+    .collection-hero {
+      padding: 3rem 1rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show product count",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
