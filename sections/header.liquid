@@ -20,14 +20,43 @@
     <nav class="site-nav" data-mobile-nav>
       <ul class="site-nav__list">
         {% for link in nav_links %}
-          <li>
-            <a
-              class="site-nav__link {% if link.current %}site-nav__link--active{% endif %}"
-              href="{{ link.url }}"
-            >
-              {{ link.title }}
-            </a>
-          </li>
+          {% assign link_title_lower = link.title | downcase %}
+          {% if link_title_lower == 'collections' and link.links.size > 0 %}
+            <li class="site-nav__item site-nav__item--has-dropdown">
+              <a
+                class="site-nav__link site-nav__link--with-caret {% if link.current %}site-nav__link--active{% endif %}"
+                href="{{ link.url }}"
+                aria-haspopup="true"
+                data-dropdown-toggle
+              >
+                {{ link.title }}
+                <svg class="site-nav__caret" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                  <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+              <ul class="site-nav__dropdown" role="list">
+                {% for child in link.links %}
+                  <li>
+                    <a
+                      class="site-nav__dropdown-link {% if child.current %}site-nav__dropdown-link--active{% endif %}"
+                      href="{{ child.url }}"
+                    >
+                      {{ child.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% else %}
+            <li class="site-nav__item">
+              <a
+                class="site-nav__link {% if link.current %}site-nav__link--active{% endif %}"
+                href="{{ link.url }}"
+              >
+                {{ link.title }}
+              </a>
+            </li>
+          {% endif %}
         {% endfor %}
       </ul>
     </nav>

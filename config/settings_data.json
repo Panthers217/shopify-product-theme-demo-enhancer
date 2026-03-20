@@ -1,0 +1,76 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "store_title": "Digital Product Enhancer",
+          "menu": "enhancer"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "blocks": {
+          "footer_column_PjhWrp": {
+            "type": "footer_column",
+            "settings": {
+              "heading": "Shop",
+              "menu": "shop"
+            }
+          },
+          "footer_column_EcrGap": {
+            "type": "footer_column",
+            "settings": {
+              "heading": "Customer Service",
+              "menu": "customer-service"
+            }
+          },
+          "footer_column_qTxiAE": {
+            "type": "footer_column",
+            "settings": {
+              "heading": "About Us",
+              "menu": "about-us"
+            }
+          },
+          "footer_column_Tzfnti": {
+            "type": "footer_column",
+            "settings": {
+              "heading": "Collections",
+              "menu": "collections"
+            }
+          },
+          "newsletter_social_QQy4Dw": {
+            "type": "newsletter_social",
+            "settings": {
+              "heading": "Newsletter",
+              "subtext": "Subscribe to get special offers and updates",
+              "email_placeholder": "Enter your email",
+              "button_label": "Subscribe",
+              "social_menu": "social-media"
+            }
+          }
+        },
+        "block_order": [
+          "footer_column_PjhWrp",
+          "footer_column_EcrGap",
+          "footer_column_qTxiAE",
+          "footer_column_Tzfnti",
+          "newsletter_social_QQy4Dw"
+        ],
+        "settings": {
+          "footer_text": "Built with Shopify Online Store 2.0 for portfolio demonstration."
+        }
+      }
+    },
+    "content_for_index": []
+  }
+}

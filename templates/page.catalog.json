@@ -1,9 +1,17 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "collection-hero",
       "settings": {
-        "hero_image": null,
         "bg_color": "#f8fafc",
         "show_count": true
       }
@@ -20,12 +28,10 @@
       "settings": {
         "title": "Explore This Collection",
         "description": "Discover carefully curated products tailored to meet your needs.",
-        "promo_image": null,
         "bg_color": "#0ea5e9",
         "text_color": "#ffffff",
         "show_cta": true,
-        "cta_text": "Shop Now",
-        "cta_url": null
+        "cta_text": "Shop Now"
       }
     },
     "products": {

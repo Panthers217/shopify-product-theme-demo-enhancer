@@ -52,8 +52,30 @@
     });
   }
 
+  function initMobileDropdowns() {
+    // On touch/mobile the nav is open via the hamburger; tapping a dropdown
+    // trigger should expand the sub-list instead of navigating.
+    var triggers = document.querySelectorAll("[data-dropdown-toggle]");
+    if (!triggers.length) return;
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener("click", function (e) {
+        // Only intercept when the mobile nav is actually visible (hamburger open)
+        var nav = document.querySelector("[data-mobile-nav]");
+        if (!nav || !nav.classList.contains("is-open")) return;
+
+        e.preventDefault();
+        var item = trigger.closest(".site-nav__item--has-dropdown");
+        if (item) {
+          item.classList.toggle("is-open");
+        }
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initMobileNav();
     initEnhancerDemo();
+    initMobileDropdowns();
   });
 })();
