@@ -1,5 +1,6 @@
 (function () {
   "use strict";
+  
 
   function initMobileNav() {
     var toggle = document.querySelector("[data-nav-toggle]");
@@ -73,9 +74,27 @@
     });
   }
 
+  function initGSAP() {
+    if (typeof gsap === 'undefined') return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Scroll-triggered fade-in for any element with [data-animate]
+    gsap.utils.toArray('[data-animate]').forEach(function (el) {
+      gsap.from(el, {
+        scrollTrigger: { trigger: el, start: 'top 85%' },
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        ease: 'power2.out'
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initMobileNav();
     initEnhancerDemo();
     initMobileDropdowns();
+    initGSAP();
   });
 })();

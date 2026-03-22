@@ -1,0 +1,122 @@
+<section class="main-cart">
+  <div class="container">
+    <h1 class="section-heading">Your Cart</h1>
+
+    {% if cart.item_count == 0 %}
+      <div class="cart-empty">
+        <p>Your cart is empty.</p>
+        <a class="btn" href="{{ routes.all_products_collection_url }}">Continue Shopping</a>
+      </div>
+    {% else %}
+      {% form 'cart', cart, id: 'cart-form' %}
+        <div class="cart-layout">
+          <div class="cart-items">
+            <div class="cart-items__header">
+              <span>Product</span>
+              <span>Quantity</span>
+              <span>Price</span>
+            </div>
+
+            {% for item in cart.items %}
+              <div class="cart-item" data-cart-item>
+                <div class="cart-item__media">
+                  {% if item.image %}
+                    {{ item.image | image_url: width: 120 | image_tag: alt: item.title, loading: 'lazy' }}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg cart-item__placeholder' }}
+                  {% endif %}
+                  <div class="cart-item__details">
+                    <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
+                    {% unless item.product.has_only_default_variant %}
+                      <p class="cart-item__variant">{{ item.variant.title }}</p>
+                    {% endunless %}
+                    <a
+                      class="cart-item__remove"
+                      href="{{ item.url_to_remove }}"
+                      aria-label="Remove {{ item.title | escape }}"
+                    >
+                      Remove
+                    </a>
+                  </div>
+                </div>
+
+                <div class="cart-item__quantity">
+                  <input
+                    class="cart-item__qty-input"
+                    type="number"
+                    name="updates[]"
+                    value="{{ item.quantity }}"
+                    min="0"
+                    aria-label="Quantity for {{ item.title | escape }}"
+                  >
+                </div>
+
+                <div class="cart-item__price">
+                  {{ item.final_line_price | money }}
+                  {% if item.original_line_price != item.final_line_price %}
+                    <s class="cart-item__original-price">{{ item.original_line_price | money }}</s>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="cart-summary">
+            {% if cart.cart_level_discount_applications.size > 0 %}
+              <div class="cart-summary__discounts">
+                {% for discount in cart.cart_level_discount_applications %}
+                  <div class="cart-summary__discount">
+                    <span>{{ discount.title }}</span>
+                    <span>-{{ discount.total_allocated_amount | money }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="cart-summary__subtotal">
+              <span>Subtotal</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+
+            <p class="cart-summary__tax-note">
+              {{ 'cart.general.taxes_and_shipping_at_checkout_html' | t }}
+            </p>
+
+            <button class="btn cart-summary__checkout" type="submit" name="checkout">
+              Checkout
+            </button>
+
+            <button class="btn btn--secondary cart-summary__update" type="submit" name="update">
+              Update Cart
+            </button>
+
+            {% if section.settings.show_shipping_link %}
+              <a class="cart-summary__shipping-link" href="{{ pages[section.settings.shipping_page].url }}">
+                View Shipping &amp; Returns Policy
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endform %}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_shipping_link",
+      "label": "Show link to Shipping & Returns page",
+      "default": true
+    },
+    {
+      "type": "page",
+      "id": "shipping_page",
+      "label": "Shipping & Returns page"
+    }
+  ]
+}
+{% endschema %}
