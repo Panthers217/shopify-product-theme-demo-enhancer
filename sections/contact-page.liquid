@@ -1,0 +1,251 @@
+<section class="contact-page">
+  {% if section.blocks.size == 0 %}
+    <div class="container">
+      <div class="empty-state">Add blocks in the Theme Editor to build this contact page.</div>
+    </div>
+  {% else %}
+    {% assign prev_type = '' %}
+
+    {% for block in section.blocks %}
+      {% assign next_block = section.blocks[forloop.index] %}
+      {% assign next_type = next_block.type | default: '' %}
+
+      {% case block.type %}
+        {% when 'intro' %}
+          <div class="contact-page__intro" {{ block.shopify_attributes }}>
+            <div class="container">
+              {% if block.settings.heading != blank %}
+                <h1 class="section-heading">{{ block.settings.heading }}</h1>
+              {% endif %}
+              {% if block.settings.text != blank %}
+                <div class="section-subheading rte">{{ block.settings.text }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+        {% when 'method' %}
+          {% if prev_type != 'method' %}
+            <div class="contact-page__methods">
+              <div class="container">
+                {% if block.settings.section_heading != blank %}
+                  <h2 class="section-heading">{{ block.settings.section_heading }}</h2>
+                {% endif %}
+                <div class="contact-page__methods-grid">
+          {% endif %}
+
+          <article class="contact-method-card" {{ block.shopify_attributes }}>
+            {% if block.settings.label != blank %}
+              <p class="contact-method-card__label">{{ block.settings.label }}</p>
+            {% endif %}
+            {% if block.settings.value != blank %}
+              {% if block.settings.link != blank %}
+                <a class="contact-method-card__value" href="{{ block.settings.link }}">{{ block.settings.value }}</a>
+              {% else %}
+                <p class="contact-method-card__value">{{ block.settings.value }}</p>
+              {% endif %}
+            {% endif %}
+            {% if block.settings.note != blank %}
+              <p class="contact-method-card__note">{{ block.settings.note }}</p>
+            {% endif %}
+          </article>
+
+          {% if next_type != 'method' %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+        {% when 'form' %}
+          <div class="contact-page__form-wrap" {{ block.shopify_attributes }}>
+            <div class="container">
+              <div class="contact-page__form-shell">
+                {% if block.settings.heading != blank %}
+                  <h2 class="section-heading">{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.description != blank %}
+                  <p class="section-subheading">{{ block.settings.description }}</p>
+                {% endif %}
+
+                {% form 'contact' %}
+                  {% if form.posted_successfully? %}
+                    <div class="empty-state">Thanks for reaching out. We will get back to you soon.</div>
+                  {% endif %}
+
+                  {% if form.errors %}
+                    <div class="empty-state">{{ form.errors | default_errors }}</div>
+                  {% endif %}
+
+                  <div class="contact-page__form-grid">
+                    <label>
+                      Name
+                      <input type="text" name="contact[name]" value="{% if form.name %}{{ form.name }}{% endif %}">
+                    </label>
+
+                    <label>
+                      Email
+                      <input type="email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% endif %}" required>
+                    </label>
+
+                    <label class="contact-page__form-grid-full">
+                      Subject
+                      <input type="text" name="contact[subject]" value="{% if form.subject %}{{ form.subject }}{% endif %}">
+                    </label>
+
+                    <label class="contact-page__form-grid-full">
+                      Message
+                      <textarea name="contact[body]" rows="6" required>{% if form.body %}{{ form.body }}{% endif %}</textarea>
+                    </label>
+                  </div>
+
+                  <button class="btn" type="submit">{{ block.settings.button_text }}</button>
+                {% endform %}
+              </div>
+            </div>
+          </div>
+
+        {% when 'faq_item' %}
+          {% if prev_type != 'faq_item' %}
+            <div class="contact-page__faq">
+              <div class="container">
+                {% if block.settings.section_heading != blank %}
+                  <h2 class="section-heading">{{ block.settings.section_heading }}</h2>
+                {% endif %}
+                <div class="contact-page__faq-list">
+          {% endif %}
+
+          <details class="contact-page__faq-item" {{ block.shopify_attributes }}>
+            <summary class="contact-page__faq-question">
+              {{ block.settings.question }}
+              <svg class="contact-page__faq-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </summary>
+            <div class="contact-page__faq-answer rte">{{ block.settings.answer }}</div>
+          </details>
+
+          {% if next_type != 'faq_item' %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+      {% endcase %}
+
+      {% assign prev_type = block.type %}
+    {% endfor %}
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Contact page",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "intro",
+      "name": "Intro",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Contact"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Questions about setup, integrations, or the Product Enhancer demo? Send a message and our team will help.</p>"
+        }
+      ]
+    },
+    {
+      "type": "method",
+      "name": "Contact method",
+      "settings": [
+        {
+          "type": "text",
+          "id": "section_heading",
+          "label": "Section heading (first method only)",
+          "default": "Ways to reach us"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Email"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "support@example.com"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Optional link"
+        },
+        {
+          "type": "textarea",
+          "id": "note",
+          "label": "Note",
+          "default": "Average response time: within one business day."
+        }
+      ]
+    },
+    {
+      "type": "form",
+      "name": "Contact form",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Send us a message"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Tell us about your use case and we will follow up with next steps."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Send message"
+        }
+      ]
+    },
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "section_heading",
+          "label": "Section heading (first FAQ only)",
+          "default": "Contact FAQs"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Do you provide onboarding help?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Yes. We can guide you through setup, content strategy, and rollout planning.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact page"
+    }
+  ]
+}
+{% endschema %}

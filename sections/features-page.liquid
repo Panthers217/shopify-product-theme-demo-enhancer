@@ -1,0 +1,280 @@
+<section class="features-page">
+  {% if section.blocks.size == 0 %}
+    <div class="container">
+      <div class="empty-state">
+        Add feature blocks in the Theme Editor to build out this page.
+      </div>
+    </div>
+  {% else %}
+    {% assign prev_type = '' %}
+
+    {% for block in section.blocks %}
+      {% assign next_block = section.blocks[forloop.index] %}
+      {% assign next_type = next_block.type | default: '' %}
+
+      {% case block.type %}
+        {% when 'spotlight' %}
+          <div class="features-spotlight{% if block.settings.image_side == 'right' %} features-spotlight--reversed{% endif %}" {{ block.shopify_attributes }}>
+            <div class="container features-spotlight__inner">
+              <div class="features-spotlight__content">
+                {% if block.settings.eyebrow != blank %}
+                  <p class="features-page__eyebrow">{{ block.settings.eyebrow }}</p>
+                {% endif %}
+                {% if block.settings.heading != blank %}
+                  <h2 class="section-heading">{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.text != blank %}
+                  <div class="features-spotlight__text rte">{{ block.settings.text }}</div>
+                {% endif %}
+                {% if block.settings.cta_text != blank and block.settings.cta_link != blank %}
+                  <a class="btn" href="{{ block.settings.cta_link }}">{{ block.settings.cta_text }}</a>
+                {% endif %}
+              </div>
+
+              <div class="features-spotlight__media">
+                {% if block.settings.image != blank %}
+                  {{
+                    block.settings.image
+                    | image_url: width: 900
+                    | image_tag:
+                      alt: block.settings.heading,
+                      loading: 'lazy',
+                      width: 900,
+                      height: 900,
+                      sizes: '(max-width: 980px) calc(100vw - 32px), 50vw'
+                  }}
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg features-spotlight__placeholder' }}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+        {% when 'capability' %}
+          {% if prev_type != 'capability' %}
+            <div class="features-capabilities">
+              <div class="container">
+                {% if block.settings.section_heading != blank %}
+                  <h2 class="section-heading">{{ block.settings.section_heading }}</h2>
+                {% endif %}
+                {% if block.settings.section_subheading != blank %}
+                  <p class="section-subheading">{{ block.settings.section_subheading }}</p>
+                {% endif %}
+                <div class="features-capabilities__grid">
+          {% endif %}
+
+          <article class="features-capability-card" {{ block.shopify_attributes }}>
+            {% if block.settings.badge != blank %}
+              <p class="features-capability-card__badge">{{ block.settings.badge }}</p>
+            {% endif %}
+            <h3 class="features-capability-card__title">{{ block.settings.title }}</h3>
+            {% if block.settings.text != blank %}
+              <p class="features-capability-card__text">{{ block.settings.text }}</p>
+            {% endif %}
+          </article>
+
+          {% if next_type != 'capability' %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+        {% when 'metric' %}
+          {% if prev_type != 'metric' %}
+            <div class="features-metrics">
+              <div class="container">
+                {% if block.settings.section_heading != blank %}
+                  <h2 class="section-heading features-metrics__heading">{{ block.settings.section_heading }}</h2>
+                {% endif %}
+                <div class="features-metrics__grid">
+          {% endif %}
+
+          <div class="features-metric" {{ block.shopify_attributes }}>
+            <span class="features-metric__value">{{ block.settings.value }}</span>
+            <span class="features-metric__label">{{ block.settings.label }}</span>
+          </div>
+
+          {% if next_type != 'metric' %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+        {% when 'faq_item' %}
+          {% if prev_type != 'faq_item' %}
+            <div class="features-faq">
+              <div class="container">
+                {% if block.settings.section_heading != blank %}
+                  <h2 class="section-heading">{{ block.settings.section_heading }}</h2>
+                {% endif %}
+                <div class="features-faq__list">
+          {% endif %}
+
+          <details class="features-faq-item" {{ block.shopify_attributes }}>
+            <summary class="features-faq-item__question">
+              {{ block.settings.question }}
+              <svg class="features-faq-item__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </summary>
+            <div class="features-faq-item__answer rte">{{ block.settings.answer }}</div>
+          </details>
+
+          {% if next_type != 'faq_item' %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+      {% endcase %}
+
+      {% assign prev_type = block.type %}
+    {% endfor %}
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Features page",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "spotlight",
+      "name": "Spotlight",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_side",
+          "label": "Image side",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Core feature"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Turn rough product data into polished storefront copy"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Body text",
+          "default": "<p>Use this block to explain your flagship feature in more depth, with space for supporting detail and a clear next step.</p>"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Button text"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "Button link"
+        }
+      ]
+    },
+    {
+      "type": "capability",
+      "name": "Capability card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "section_heading",
+          "label": "Section heading (first card only)",
+          "default": "Feature highlights"
+        },
+        {
+          "type": "textarea",
+          "id": "section_subheading",
+          "label": "Section subheading (first card only)",
+          "default": "Add cards to explain the individual capabilities that make the product useful."
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Fast"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Generate stronger product descriptions"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Highlight what this capability does and why it matters to the merchant or customer."
+        }
+      ]
+    },
+    {
+      "type": "metric",
+      "name": "Metric",
+      "settings": [
+        {
+          "type": "text",
+          "id": "section_heading",
+          "label": "Section heading (first metric only)",
+          "default": "Results that matter"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "70%"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Faster content updates"
+        }
+      ]
+    },
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "section_heading",
+          "label": "Section heading (first FAQ only)",
+          "default": "Feature FAQs"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How does the enhancer fit into my product workflow?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Use the FAQ area to address implementation questions, expected outcomes, or merchant setup details.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features page"
+    }
+  ]
+}
+{% endschema %}

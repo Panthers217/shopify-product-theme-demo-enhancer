@@ -1,15 +1,82 @@
 {
   "sections": {
-    "contact": {
-      "type": "contact-form",
-      "settings": {
-        "heading": "Contact",
-        "description": "Questions about setup, integrations, or the Product Enhancer demo? Send a message.",
-        "button_text": "Send message"
-      }
+    "contact_content": {
+      "type": "contact-page",
+      "blocks": {
+        "intro_1": {
+          "type": "intro",
+          "settings": {
+            "heading": "Contact",
+            "text": "<p>Questions about setup, integrations, or the Product Enhancer demo? Send a message and our team will help you plan the next step.<\/p>"
+          }
+        },
+        "method_1": {
+          "type": "method",
+          "settings": {
+            "section_heading": "Ways to reach us",
+            "label": "Email",
+            "value": "support@example.com",
+            "link": "mailto:support@example.com",
+            "note": "Average response time: within one business day."
+          }
+        },
+        "method_2": {
+          "type": "method",
+          "settings": {
+            "section_heading": "",
+            "label": "Sales",
+            "value": "Book a strategy call",
+            "link": "https://example.com",
+            "note": "For plan selection, integrations, and implementation questions."
+          }
+        },
+        "method_3": {
+          "type": "method",
+          "settings": {
+            "section_heading": "",
+            "label": "Hours",
+            "value": "Mon-Fri, 9am-6pm ET",
+            "note": "Support messages sent on weekends are handled next business day."
+          }
+        },
+        "form_1": {
+          "type": "form",
+          "settings": {
+            "heading": "Send us a message",
+            "description": "Share what you are trying to build and we will follow up with practical recommendations.",
+            "button_text": "Send message"
+          }
+        },
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "section_heading": "Contact FAQs",
+            "question": "Do you offer onboarding support?",
+            "answer": "<p>Yes. We can help with setup, section configuration, and rollout planning for your catalog.<\/p>"
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "section_heading": "",
+            "question": "Can you help with custom theme work?",
+            "answer": "<p>Yes, custom implementation support is available based on scope and timeline.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "intro_1",
+        "method_1",
+        "method_2",
+        "method_3",
+        "form_1",
+        "faq_1",
+        "faq_2"
+      ],
+      "settings": {}
     }
   },
   "order": [
-    "contact"
+    "contact_content"
   ]
 }

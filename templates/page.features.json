@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -6,55 +15,120 @@
         "title": "Product Enhancer Features",
         "subtitle": "Showcase AI-assisted product copy improvements, workflow speed, and merchandising consistency.",
         "cta_text": "Try It on a Product",
-        "cta_link": "/collections/all"
+        "cta_link": "/collections/all",
+        "background_image": "shopify://shop_images/software-developer-on-php-code.jpg"
       }
     },
     "main": {
       "type": "main-page",
       "settings": {
         "show_page_title": false,
-        "intro_text": "<p>Use this page to explain feature highlights, before/after examples, and how the enhancer fits your product workflow.<\/p>"
+        "intro_text": "<p>Use this page to explain feature highlights, before/after examples, and how the enhancer fits your product workflow.</p>"
       }
     },
-    "value_props": {
-      "type": "value-props",
+    "features_content": {
+      "type": "features-page",
       "blocks": {
-        "feature_1": {
-          "type": "feature",
+        "spotlight_1": {
+          "type": "spotlight",
           "settings": {
+            "image": "shopify://shop_images/teamwork-makes-the-dream-work.jpg",
+            "image_side": "right",
+            "eyebrow": "Core feature",
+            "heading": "AI suggestions that sharpen product copy without slowing your team down",
+            "text": "<p>Show how the enhancer improves clarity, consistency, and speed across your catalog. Use this spotlight block for the headline feature you want merchants to remember.</p>",
+            "cta_text": "Try it on a product",
+            "cta_link": "/collections/all"
+          }
+        },
+        "capability_1": {
+          "type": "capability",
+          "settings": {
+            "section_heading": "What the enhancer does",
+            "section_subheading": "Use capability cards to explain what changes in the merchant workflow and how the tool improves product content quality.",
+            "badge": "Speed",
             "title": "One-click copy suggestions",
-            "text": "Generate stronger product descriptions from your existing catalog data."
+            "text": "Generate stronger descriptions from existing catalog data without rewriting every product by hand."
           }
         },
-        "feature_2": {
-          "type": "feature",
+        "capability_2": {
+          "type": "capability",
           "settings": {
+            "section_heading": "",
+            "section_subheading": "",
+            "badge": "Consistency",
             "title": "Consistent brand voice",
-            "text": "Keep messaging aligned with your tone across every listing."
+            "text": "Keep messaging aligned with your tone across product listings, launches, and seasonal updates."
           }
         },
-        "feature_3": {
-          "type": "feature",
+        "capability_3": {
+          "type": "capability",
           "settings": {
+            "section_heading": "",
+            "section_subheading": "",
+            "badge": "Output",
             "title": "Faster publishing",
-            "text": "Reduce time spent rewriting product content manually."
+            "text": "Reduce content bottlenecks so teams can move new products live with less editorial overhead."
+          }
+        },
+        "metric_1": {
+          "type": "metric",
+          "settings": {
+            "section_heading": "Results that matter",
+            "value": "70%",
+            "label": "Faster content updates"
+          }
+        },
+        "metric_2": {
+          "type": "metric",
+          "settings": {
+            "section_heading": "",
+            "value": "3x",
+            "label": "More consistent listing output"
+          }
+        },
+        "metric_3": {
+          "type": "metric",
+          "settings": {
+            "section_heading": "",
+            "value": "24/7",
+            "label": "Ready for catalog refreshes"
+          }
+        },
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "section_heading": "Feature FAQs",
+            "question": "How does this fit into my product workflow?",
+            "answer": "<p>Use the enhancer after drafting or importing product data. It helps refine copy before you publish, making the workflow faster and more consistent.</p>"
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "section_heading": "",
+            "question": "Can I still edit the product copy myself?",
+            "answer": "<p>Yes. The enhancer is meant to speed up the first draft and improve consistency, not replace merchant control over the final content.</p>"
           }
         }
       },
       "block_order": [
-        "feature_1",
-        "feature_2",
-        "feature_3"
+        "spotlight_1",
+        "capability_1",
+        "capability_2",
+        "capability_3",
+        "metric_1",
+        "metric_2",
+        "metric_3",
+        "faq_1",
+        "faq_2"
       ],
-      "settings": {
-        "heading": "What the enhancer does",
-        "subheading": "Practical capabilities for conversion-focused product pages."
-      }
+      "settings": {}
     }
   },
   "order": [
     "hero",
     "main",
-    "value_props"
+    "features_content"
   ]
 }
