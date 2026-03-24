@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "collections-index",
+      "settings": {
+        "title": "Browse Collections",
+        "description": "",
+        "button_text": "View Collection"
+      }
+    }
+  },
+  "order": ["main"]
+}

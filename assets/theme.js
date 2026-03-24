@@ -75,20 +75,168 @@
   }
 
   function initGSAP() {
-    if (typeof gsap === 'undefined') return;
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Scroll-triggered fade-in for any element with [data-animate]
+    var prefersReducedMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      return;
+    }
+
+    // Entrance timeline for the header/navigation.
+    var header = document.querySelector('.site-header');
+    var navItems = gsap.utils.toArray('.site-nav__item');
+    var headerSearch = document.querySelector('.header-search');
+    var headerCart = document.querySelector('.header-cart');
+
+    if (header) {
+      var headerTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+
+      headerTl
+        .from(header, { y: -36, autoAlpha: 0, duration: 0.55 })
+        .from(navItems, { y: -12, autoAlpha: 0, stagger: 0.05, duration: 0.35 }, '-=0.3');
+
+      if (headerSearch) {
+        headerTl.from(headerSearch, { y: -8, autoAlpha: 0, duration: 0.28 }, '-=0.2');
+      }
+
+      if (headerCart) {
+        headerTl.from(headerCart, { y: -8, autoAlpha: 0, duration: 0.28 }, '-=0.22');
+      }
+    }
+
+    // Hero panel and content reveal.
+    var heroPanel = document.querySelector('.hero__panel');
+    var heroTitle = document.querySelector('.hero__title');
+    var heroSubtitle = document.querySelector('.hero__subtitle');
+    var heroCta = document.querySelector('.hero .btn');
+
+    if (heroPanel) {
+      var heroTl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.12 });
+
+      heroTl.from(heroPanel, { scale: 0.98, autoAlpha: 0, y: 18, duration: 0.75 });
+
+      if (heroTitle) {
+        heroTl.from(heroTitle, { y: 22, autoAlpha: 0, duration: 0.5 }, '-=0.4');
+      }
+
+      if (heroSubtitle) {
+        heroTl.from(heroSubtitle, { y: 16, autoAlpha: 0, duration: 0.45 }, '-=0.32');
+      }
+
+      if (heroCta) {
+        heroTl.from(heroCta, { y: 12, autoAlpha: 0, duration: 0.4 }, '-=0.24');
+      }
+
+      // Subtle parallax on hero content while scrolling near the hero.
+      var heroContent = document.querySelector('.hero__content');
+      if (heroContent) {
+        gsap.to(heroContent, {
+          yPercent: -8,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroPanel,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+          }
+        });
+      }
+    }
+
+    // Generic section reveal animation.
+    gsap.utils
+      .toArray(
+        '.featured-products, .value-props, .main-product, .main-page, .collection-hero, .collection-filters, .collection-products, .collection-promo, .about-page, .features-page, .contact-page, .main-cart, .main-blog'
+      )
+      .forEach(function (section) {
+        gsap.from(section, {
+          y: 32,
+          autoAlpha: 0,
+          duration: 0.7,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 86%',
+            once: true
+          }
+        });
+      });
+
+    // Grid/card stagger reveals.
+    gsap.utils
+      .toArray('.product-grid, .value-props__grid, .about-team__grid, .features-capabilities__grid, .contact-page__methods-grid')
+      .forEach(function (grid) {
+        var cards = gsap.utils.toArray(
+          '.product-card, .value-prop-card, .about-team-card, .features-capability-card, .contact-method-card',
+          grid
+        );
+
+        if (!cards.length) {
+          return;
+        }
+
+        gsap.from(cards, {
+          y: 26,
+          autoAlpha: 0,
+          duration: 0.52,
+          stagger: 0.08,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: grid,
+            start: 'top 88%',
+            once: true
+          }
+        });
+      });
+
+    // FAQ accordion entrance with slight stagger.
+    gsap.utils.toArray('.about-faq__list, .features-faq__list, .contact-page__faq-list').forEach(function (list) {
+      var items = gsap.utils.toArray('details', list);
+      if (!items.length) return;
+
+      gsap.from(items, {
+        x: 16,
+        autoAlpha: 0,
+        duration: 0.4,
+        stagger: 0.06,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: list,
+          start: 'top 88%',
+          once: true
+        }
+      });
+    });
+
+    // Existing opt-in data attribute reveal remains supported.
     gsap.utils.toArray('[data-animate]').forEach(function (el) {
       gsap.from(el, {
-        scrollTrigger: { trigger: el, start: 'top 85%' },
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
         opacity: 0,
         y: 30,
         duration: 0.6,
         ease: 'power2.out'
       });
     });
+
+    // Interactive hover micro-motion for cards and buttons.
+    gsap.utils
+      .toArray('.product-card, .value-prop-card, .about-team-card, .features-capability-card, .contact-method-card, .btn')
+      .forEach(function (el) {
+        el.addEventListener('mouseenter', function () {
+          gsap.to(el, { y: -4, duration: 0.2, ease: 'power2.out', overwrite: 'auto' });
+        });
+        el.addEventListener('mouseleave', function () {
+          gsap.to(el, { y: 0, duration: 0.2, ease: 'power2.out', overwrite: 'auto' });
+        });
+      });
+
+    ScrollTrigger.refresh();
   }
 
   function initSearch() {
@@ -507,6 +655,61 @@
     applyFiltersAndSort();
   }
 
+  function initMainCollectionCarousel(scope) {
+    var root = scope && scope.querySelectorAll ? scope : document;
+    var carousels = root.querySelectorAll('[data-main-collection-carousel]');
+    if (!carousels.length) return;
+
+    Array.prototype.forEach.call(carousels, function (carousel) {
+      var track = carousel.querySelector('[data-carousel-track]');
+      var prev = carousel.querySelector('[data-carousel-prev]');
+      var next = carousel.querySelector('[data-carousel-next]');
+
+      if (!track || !prev || !next) return;
+
+      var slides = Array.prototype.slice.call(track.querySelectorAll('.main-collection__slide'));
+      if (!slides.length) return;
+
+      function getStep() {
+        var firstSlide = slides[0];
+        if (!firstSlide) return Math.max(track.clientWidth * 0.85, 260);
+
+        var styles = window.getComputedStyle(track);
+        var gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+        return firstSlide.getBoundingClientRect().width + gap;
+      }
+
+      function updateControlState() {
+        var maxScroll = Math.max(track.scrollWidth - track.clientWidth, 0);
+        if (maxScroll <= 4) {
+          prev.disabled = true;
+          next.disabled = true;
+          return;
+        }
+
+        prev.disabled = track.scrollLeft <= 4;
+        next.disabled = track.scrollLeft >= maxScroll - 4;
+      }
+
+      if (carousel.dataset.carouselInitialized !== 'true') {
+        prev.addEventListener('click', function () {
+          track.scrollBy({ left: -getStep(), behavior: 'smooth' });
+        });
+
+        next.addEventListener('click', function () {
+          track.scrollBy({ left: getStep(), behavior: 'smooth' });
+        });
+
+        track.addEventListener('scroll', updateControlState, { passive: true });
+        window.addEventListener('resize', updateControlState);
+
+        carousel.dataset.carouselInitialized = 'true';
+      }
+
+      updateControlState();
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initMobileNav();
     initEnhancerDemo();
@@ -514,5 +717,10 @@
     initGSAP();
     initSearch();
     initCollectionFiltersAndSort();
+    initMainCollectionCarousel();
+  });
+
+  document.addEventListener('shopify:section:load', function (event) {
+    initMainCollectionCarousel(event.target);
   });
 })();

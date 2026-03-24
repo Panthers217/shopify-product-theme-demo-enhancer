@@ -1,0 +1,89 @@
+<section class="collections-index">
+  <div class="container">
+    <h1 class="section-heading">{{ section.settings.title }}</h1>
+    
+    {% if section.settings.description != blank %}
+      <div class="section-subheading rte">{{ section.settings.description }}</div>
+    {% endif %}
+
+    {% if collections.size > 0 %}
+      <div class="main-collection__carousel" data-main-collection-carousel>
+        <button type="button" class="main-collection__control" data-carousel-prev aria-label="Previous collections">
+          ←
+        </button>
+        
+        <div class="main-collection__viewport" data-carousel-viewport>
+          <ul class="main-collection__track" data-carousel-track>
+            {% for collection in collections %}
+              {% if collection.products_count > 0 %}
+                <li class="main-collection__slide">
+                  <article class="product-card" data-collection-id="{{ collection.id }}">
+                    <a class="product-card__media" href="{{ collection.url }}">
+                      {% if collection.image %}
+                        {{
+                          collection.image
+                          | image_url: width: 800
+                          | image_tag:
+                            alt: collection.title,
+                            loading: 'lazy',
+                            width: 800,
+                            height: 600,
+                            sizes: '(max-width: 600px) 100vw, (max-width: 980px) 50vw, 33vw'
+                        }}
+                      {% else %}
+                        {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg product-card__placeholder' }}
+                      {% endif %}
+                    </a>
+                    
+                    <div class="product-card__body">
+                      <h3 class="product-card__title">
+                        <a href="{{ collection.url }}">{{ collection.title }}</a>
+                      </h3>
+                      <div class="product-card__price">
+                        {{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}
+                      </div>
+                      <a class="btn btn--secondary" href="{{ collection.url }}">{{ section.settings.button_text }}</a>
+                    </div>
+                  </article>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <button type="button" class="main-collection__control" data-carousel-next aria-label="Next collections">
+          →
+        </button>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p>No collections available yet.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections Index",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Browse Collections"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Section description"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "View Collection"
+    }
+  ]
+}
+{% endschema %}
