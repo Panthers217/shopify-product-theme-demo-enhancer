@@ -12,6 +12,7 @@
     "hero": {
       "type": "collection-hero",
       "settings": {
+        "collection": "all",
         "bg_color": "#f8fafc",
         "show_count": true
       }
@@ -19,6 +20,7 @@
     "filters": {
       "type": "collection-filters",
       "settings": {
+        "collection": "all",
         "show_filters_toggle": true,
         "show_sort": true
       }
@@ -26,8 +28,9 @@
     "promo": {
       "type": "collection-promo",
       "settings": {
-        "title": "Explore This Collection",
-        "description": "Discover carefully curated products tailored to meet your needs.",
+        "collection": "all",
+        "title": "",
+        "description": "",
         "bg_color": "#0ea5e9",
         "text_color": "#ffffff",
         "show_cta": true,
@@ -37,6 +40,8 @@
     "products": {
       "type": "collection-products",
       "settings": {
+        "collection": "all",
+        "products_per_page": 12,
         "button_text": "View Product",
         "show_pagination": true
       }

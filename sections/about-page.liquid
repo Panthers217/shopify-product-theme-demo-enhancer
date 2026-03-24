@@ -1,0 +1,319 @@
+<section class="about-page">
+  {% assign prev_type = '' %}
+
+  {% for block in section.blocks %}
+    {% assign next_block = section.blocks[forloop.index] %}
+    {% assign next_type = next_block.type | default: '' %}
+
+    {% case block.type %}
+
+      {% when 'image_text' %}
+        <div
+          class="about-image-text{% if block.settings.image_side == 'right' %} about-image-text--reversed{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="container about-image-text__inner">
+            <div class="about-image-text__media">
+              {% if block.settings.image != blank %}
+                {{
+                  block.settings.image
+                  | image_url: width: 900
+                  | image_tag:
+                    alt: block.settings.heading,
+                    loading: 'lazy',
+                    width: 900,
+                    height: 900,
+                    sizes: '(max-width: 980px) calc(100vw - 32px), 50vw'
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg about-image-text__placeholder' }}
+              {% endif %}
+            </div>
+            <div class="about-image-text__content">
+              {% if block.settings.eyebrow != blank %}
+                <p class="about-eyebrow">{{ block.settings.eyebrow }}</p>
+              {% endif %}
+              {% if block.settings.heading != blank %}
+                <h2 class="section-heading">{{ block.settings.heading }}</h2>
+              {% endif %}
+              {% if block.settings.text != blank %}
+                <div class="about-image-text__text rte">{{ block.settings.text }}</div>
+              {% endif %}
+              {% if block.settings.cta_text != blank and block.settings.cta_link != blank %}
+                <a class="btn" href="{{ block.settings.cta_link }}">{{ block.settings.cta_text }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      {% when 'stats' %}
+        <div class="about-stats" {{ block.shopify_attributes }}>
+          <div class="container">
+            {% if block.settings.heading != blank %}
+              <h2 class="section-heading about-stats__heading">{{ block.settings.heading }}</h2>
+            {% endif %}
+            <div class="about-stats__grid">
+              {% for i in (1..4) %}
+                {% liquid
+                  assign val_key = 'stat_' | append: i | append: '_value'
+                  assign lbl_key = 'stat_' | append: i | append: '_label'
+                  assign stat_val = block.settings[val_key]
+                  assign stat_lbl = block.settings[lbl_key]
+                %}
+                {% if stat_val != blank %}
+                  <div class="about-stat">
+                    <span class="about-stat__value">{{ stat_val }}</span>
+                    <span class="about-stat__label">{{ stat_lbl }}</span>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+      {% when 'team_member' %}
+        {% if prev_type != 'team_member' %}
+          <div class="about-team">
+            <div class="container">
+              <div class="about-team__grid">
+        {% endif %}
+
+        <article class="about-team-card" {{ block.shopify_attributes }}>
+          <div class="about-team-card__avatar">
+            {% if block.settings.image != blank %}
+              {{
+                block.settings.image
+                | image_url: width: 400
+                | image_tag:
+                  alt: block.settings.name,
+                  loading: 'lazy',
+                  width: 400,
+                  height: 400,
+                  sizes: '200px'
+              }}
+            {% else %}
+              {{ 'customer' | placeholder_svg_tag: 'placeholder-svg about-team-card__placeholder' }}
+            {% endif %}
+          </div>
+          <div class="about-team-card__body">
+            <p class="about-team-card__name">{{ block.settings.name }}</p>
+            <p class="about-team-card__role">{{ block.settings.role }}</p>
+            {% if block.settings.bio != blank %}
+              <p class="about-team-card__bio">{{ block.settings.bio }}</p>
+            {% endif %}
+          </div>
+        </article>
+
+        {% if next_type != 'team_member' %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+      {% when 'faq_item' %}
+        {% if prev_type != 'faq_item' %}
+          <div class="about-faq">
+            <div class="container">
+              {% if block.settings.section_heading != blank %}
+                <h2 class="section-heading">{{ block.settings.section_heading }}</h2>
+              {% endif %}
+              <div class="about-faq__list">
+        {% endif %}
+
+        <details class="about-faq-item" {{ block.shopify_attributes }}>
+          <summary class="about-faq-item__question">
+            {{ block.settings.question }}
+            <svg class="about-faq-item__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </summary>
+          <div class="about-faq-item__answer rte">{{ block.settings.answer }}</div>
+        </details>
+
+        {% if next_type != 'faq_item' %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+    {% endcase %}
+
+    {% assign prev_type = block.type %}
+  {% endfor %}
+</section>
+
+{% schema %}
+{
+  "name": "About page",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "image_text",
+      "name": "Image + Text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_side",
+          "label": "Image side",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow label",
+          "placeholder": "e.g. Our Story"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "We build for digital-first brands"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Body text",
+          "default": "<p>Share the story behind this store, your mission, or what drives the products you create here.</p>"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Button text"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "Button link"
+        }
+      ]
+    },
+    {
+      "type": "stats",
+      "name": "Stats row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "placeholder": "Optional heading above the stats"
+        },
+        {
+          "type": "text",
+          "id": "stat_1_value",
+          "label": "Stat 1 — Value",
+          "default": "10k+"
+        },
+        {
+          "type": "text",
+          "id": "stat_1_label",
+          "label": "Stat 1 — Label",
+          "default": "Happy customers"
+        },
+        {
+          "type": "text",
+          "id": "stat_2_value",
+          "label": "Stat 2 — Value",
+          "default": "50+"
+        },
+        {
+          "type": "text",
+          "id": "stat_2_label",
+          "label": "Stat 2 — Label",
+          "default": "Digital products"
+        },
+        {
+          "type": "text",
+          "id": "stat_3_value",
+          "label": "Stat 3 — Value",
+          "default": "99%"
+        },
+        {
+          "type": "text",
+          "id": "stat_3_label",
+          "label": "Stat 3 — Label",
+          "default": "Satisfaction rate"
+        },
+        {
+          "type": "text",
+          "id": "stat_4_value",
+          "label": "Stat 4 — Value",
+          "default": "24/7"
+        },
+        {
+          "type": "text",
+          "id": "stat_4_label",
+          "label": "Stat 4 — Label",
+          "default": "Download access"
+        }
+      ]
+    },
+    {
+      "type": "team_member",
+      "name": "Team member",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Alex Rivera"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role",
+          "default": "Founder & Designer"
+        },
+        {
+          "type": "textarea",
+          "id": "bio",
+          "label": "Bio",
+          "default": "Short bio or a line about what this person brings to the team."
+        }
+      ]
+    },
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "section_heading",
+          "label": "Section heading (first FAQ item only)",
+          "placeholder": "Frequently asked questions"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What formats do your digital products come in?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Products are available as PDF, EPUB, and ZIP bundles. All downloads are delivered instantly after purchase.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About page"
+    }
+  ]
+}
+{% endschema %}

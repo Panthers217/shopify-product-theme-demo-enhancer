@@ -1,3 +1,13 @@
+{% liquid
+  assign active_collection = collection
+  if active_collection == blank and section.settings.collection != blank
+    assign active_collection = section.settings.collection
+  endif
+  if active_collection == blank
+    assign active_collection = collections['all']
+  endif
+%}
+
 <section class="collection-filters">
   <div class="container collection-filters__inner">
     <div class="filters-header">
@@ -13,9 +23,22 @@
     </div>
 
     <div class="filters-content" data-filters-content>
-      {% if collection.filters != blank %}
+      {% if active_collection == blank %}
+        <p class="filters-empty">Select a collection in this section to load Shopify filters and sorting.</p>
+      {% elsif active_collection.filters != blank %}
         <div class="filters-group">
-          {% for filter in collection.filters %}
+          {% for filter in active_collection.filters %}
+            {% liquid
+              if filter.param_name == 'filter.p.vendor'
+                assign filter_attr = 'vendor'
+              elsif filter.param_name == 'filter.p.product_type'
+                assign filter_attr = 'type'
+              elsif filter.param_name == 'filter.v.availability'
+                assign filter_attr = 'available'
+              else
+                assign filter_attr = filter.param_name | split: '.' | last | handleize
+              endif
+            %}
             <details class="filter-item">
               <summary class="filter-header">
                 <span class="filter-title">{{ filter.label }}</span>
@@ -29,6 +52,8 @@
                       type="checkbox" 
                       name="{{ filter.param_name }}" 
                       value="{{ option.value }}"
+                      data-filter-attr="{{ filter_attr }}"
+                      data-filter-value="{{ option.value | downcase | escape }}"
                       {% if option.active %}checked{% endif %}
                     >
                     <span class="filter-label">{{ option.label }}</span>
@@ -46,25 +71,23 @@
           <button class="btn btn-primary btn-filter-apply" type="button" data-apply-filters>
             Apply Filters
           </button>
-          {% if collection.current_filters != blank %}
-            <a class="btn btn-secondary" href="{{ collection.url }}">Clear all</a>
-          {% endif %}
+          <button type="button" class="btn btn-secondary" data-clear-filters>Clear all</button>
         </div>
       {% else %}
         <p class="filters-empty">No filters available for this collection.</p>
       {% endif %}
 
-      {% if section.settings.show_sort %}
+      {% if section.settings.show_sort and active_collection != blank %}
         <div class="sort-controls">
           <label for="sort-by" class="sort-label">Sort by:</label>
           <select id="sort-by" class="sort-select" data-sort-by>
             <option value="">Featured</option>
-            <option value="best-selling" {% if collection.sort_by == 'best-selling' %}selected{% endif %}>Best selling</option>
-            <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>Title (A-Z)</option>
-            <option value="title-descending" {% if collection.sort_by == 'title-descending' %}selected{% endif %}>Title (Z-A)</option>
-            <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price (Low to High)</option>
-            <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price (High to Low)</option>
-            <option value="created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
+            <option value="best-selling" {% if active_collection.sort_by == 'best-selling' %}selected{% endif %}>Best selling</option>
+            <option value="title-ascending" {% if active_collection.sort_by == 'title-ascending' %}selected{% endif %}>Title (A-Z)</option>
+            <option value="title-descending" {% if active_collection.sort_by == 'title-descending' %}selected{% endif %}>Title (Z-A)</option>
+            <option value="price-ascending" {% if active_collection.sort_by == 'price-ascending' %}selected{% endif %}>Price (Low to High)</option>
+            <option value="price-descending" {% if active_collection.sort_by == 'price-descending' %}selected{% endif %}>Price (High to Low)</option>
+            <option value="created-descending" {% if active_collection.sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
           </select>
         </div>
       {% endif %}
@@ -279,60 +302,122 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const filterToggle = document.querySelector('[data-filters-toggle]');
-    const filtersContent = document.querySelector('[data-filters-content]');
-    const sortSelect = document.querySelector('[data-sort-by]');
+  (function () {
+    var filterToggle = document.querySelector('[data-filters-toggle]');
+    var filtersContent = document.querySelector('[data-filters-content]');
+    var sortSelect = document.querySelector('[data-sort-by]');
+    var applyBtn = document.querySelector('[data-apply-filters]');
+    var clearBtn = document.querySelector('[data-clear-filters]');
+    var grid = document.querySelector('[data-products-grid]');
 
-    if (filterToggle) {
-      filterToggle.addEventListener('click', function() {
-        const isExpanded = filtersContent.getAttribute('data-expanded') === 'true';
-        filtersContent.setAttribute('data-expanded', !isExpanded);
-        filterToggle.setAttribute('aria-expanded', !isExpanded);
+    // Mobile toggle
+    if (filterToggle && filtersContent) {
+      filterToggle.addEventListener('click', function () {
+        var isExpanded = filtersContent.getAttribute('data-expanded') === 'true';
+        filtersContent.setAttribute('data-expanded', String(!isExpanded));
+        filterToggle.setAttribute('aria-expanded', String(!isExpanded));
       });
     }
 
-    if (sortSelect) {
-      sortSelect.addEventListener('change', function() {
-        const sortValue = this.value;
-        const currentUrl = new URL(window.location);
-        if (sortValue) {
-          currentUrl.searchParams.set('sort_by', sortValue);
-        } else {
-          currentUrl.searchParams.delete('sort_by');
-        }
-        window.location.href = currentUrl.toString();
+    // Sort — reorder cards in the DOM, no navigation
+    if (sortSelect && grid) {
+      sortSelect.addEventListener('change', function () {
+        sortProducts(this.value);
       });
     }
 
-    const applyFiltersBtn = document.querySelector('[data-apply-filters]');
-    if (applyFiltersBtn) {
-      applyFiltersBtn.addEventListener('click', function() {
-        // Collect checked filters and update URL
-        const checkboxes = document.querySelectorAll('.filter-option input:checked');
-        const params = new URLSearchParams(window.location.search);
-        
-        // Clear existing filter params
-        for (let key of params.keys()) {
-          if (key !== 'sort_by') {
-            params.delete(key);
+    // Apply filters
+    if (applyBtn) {
+      applyBtn.addEventListener('click', function () {
+        filterProducts();
+      });
+    }
+
+    // Clear all filters
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function () {
+        document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(function (cb) {
+          cb.checked = false;
+        });
+        filterProducts();
+      });
+    }
+
+    function filterProducts() {
+      if (!grid) return;
+      var cards = grid.querySelectorAll('.product-card');
+      var checked = document.querySelectorAll('.filter-option input[type="checkbox"]:checked');
+
+      // Group checked values by their target data attribute
+      var activeFilters = {};
+      checked.forEach(function (input) {
+        var attr = input.getAttribute('data-filter-attr');
+        var val = (input.getAttribute('data-filter-value') || '').toLowerCase();
+        if (!activeFilters[attr]) activeFilters[attr] = [];
+        activeFilters[attr].push(val);
+      });
+
+      var hasFilters = Object.keys(activeFilters).length > 0;
+
+      cards.forEach(function (card) {
+        var visible = true;
+        if (hasFilters) {
+          for (var attr in activeFilters) {
+            var values = activeFilters[attr];
+            if (attr === 'available') {
+              // Shopify availability values: "1" = in stock, "0" = sold out
+              var isAvail = card.getAttribute('data-available') === 'true';
+              if (!values.some(function (v) { return v === (isAvail ? '1' : '0'); })) {
+                visible = false;
+                break;
+              }
+            } else {
+              var cardVal = (card.getAttribute('data-' + attr) || '').toLowerCase();
+              if (!values.some(function (v) { return cardVal === v; })) {
+                visible = false;
+                break;
+              }
+            }
           }
         }
-
-        checkboxes.forEach(checkbox => {
-          params.append(checkbox.name, checkbox.value);
-        });
-
-        window.location.href = window.location.pathname + '?' + params.toString();
+        card.style.display = visible ? '' : 'none';
       });
     }
-  });
+
+    function sortProducts(sortValue) {
+      if (!grid) return;
+      var cards = Array.from(grid.querySelectorAll('.product-card'));
+      cards.sort(function (a, b) {
+        switch (sortValue) {
+          case 'price-ascending':
+            return parseInt(a.getAttribute('data-price') || 0) - parseInt(b.getAttribute('data-price') || 0);
+          case 'price-descending':
+            return parseInt(b.getAttribute('data-price') || 0) - parseInt(a.getAttribute('data-price') || 0);
+          case 'title-ascending':
+            return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
+          case 'title-descending':
+            return (b.getAttribute('data-title') || '').localeCompare(a.getAttribute('data-title') || '');
+          case 'created-descending':
+            return new Date(b.getAttribute('data-created') || 0) - new Date(a.getAttribute('data-created') || 0);
+          default:
+            // 'best-selling' or '' — restore original server-rendered order
+            return parseInt(a.getAttribute('data-index') || 0) - parseInt(b.getAttribute('data-index') || 0);
+        }
+      });
+      cards.forEach(function (card) { grid.appendChild(card); });
+    }
+  })();
 </script>
 
 {% schema %}
 {
   "name": "Collection filters",
   "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
     {
       "type": "checkbox",
       "id": "show_filters_toggle",

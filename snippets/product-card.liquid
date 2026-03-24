@@ -1,9 +1,25 @@
-<article class="product-card">
+<article class="product-card"
+  data-vendor="{{ product.vendor | downcase | escape }}"
+  data-type="{{ product.type | downcase | escape }}"
+  data-available="{{ product.available }}"
+  data-price="{{ product.price }}"
+  data-title="{{ product.title | downcase | escape }}"
+  data-created="{{ product.created_at }}"
+  data-index="{{ card_index | default: 0 }}">
   <a class="product-card__media" href="{{ product.url }}">
     {% if product.featured_image %}
-      {{ product.featured_image | image_url: width: 720 | image_tag: alt: product.title, loading: 'lazy' }}
+      {{
+        product.featured_image
+        | image_url: width: 800
+        | image_tag:
+          alt: product.title,
+          loading: 'lazy',
+          width: 800,
+          height: 600,
+          sizes: '(max-width: 600px) 100vw, (max-width: 980px) 50vw, 33vw'
+      }}
     {% else %}
-      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg product-card__placeholder' }}
     {% endif %}
   </a>
 

@@ -1,19 +1,37 @@
+{% liquid
+  assign active_collection = collection
+  if active_collection == blank and section.settings.collection != blank
+    assign active_collection = section.settings.collection
+  endif
+  if active_collection == blank
+    assign active_collection = collections['all']
+  endif
+%}
+
 <section class="collection-products">
   <div class="container">
-    {% if collection.products_count > 0 %}
+    {% if active_collection != blank and active_collection.products_count > 0 %}
+      {% paginate active_collection.products by section.settings.products_per_page %}
+      {% liquid
+        assign start_index = paginate.current_offset | plus: 1
+        assign end_index = paginate.current_offset | plus: paginate.page_size
+        if end_index > active_collection.products_count
+          assign end_index = active_collection.products_count
+        endif
+      %}
       <div class="collection-products__stats">
         <p class="products-count">
-          Showing 
-          <strong>{{ collection.products | size }}</strong> 
-          of 
-          <strong>{{ collection.products_count }}</strong> 
-          {{ collection.products_count | pluralize: 'product', 'products' }}
+          Showing
+          <strong>{{ start_index }}-{{ end_index }}</strong>
+          of
+          <strong>{{ active_collection.products_count }}</strong>
+          {{ active_collection.products_count | pluralize: 'product', 'products' }}
         </p>
       </div>
 
       <div class="product-grid" data-products-grid>
-        {% for product in collection.products %}
-          {% render 'product-card', product: product, button_text: section.settings.button_text %}
+        {% for product in active_collection.products %}
+          {% render 'product-card', product: product, button_text: section.settings.button_text, card_index: forloop.index0 %}
         {% endfor %}
       </div>
 
@@ -25,13 +43,13 @@
             </a>
           {% endif %}
 
-          {% for page in (1..paginate.pages) %}
-            {% if page == paginate.current_page %}
-              <span class="pagination-item pagination-current">{{ page }}</span>
+          {% for part in paginate.parts %}
+            {% if part.is_link %}
+              <a href="{{ part.url }}" class="pagination-link">{{ part.title }}</a>
+            {% elsif part.title == paginate.current_page %}
+              <span class="pagination-item pagination-current">{{ part.title }}</span>
             {% else %}
-              <a href="{{ paginate.url | replace: '__path__', forloop.index }}" class="pagination-link">
-                {{ page }}
-              </a>
+              <span class="pagination-item">{{ part.title }}</span>
             {% endif %}
           {% endfor %}
 
@@ -42,6 +60,7 @@
           {% endif %}
         </div>
       {% endif %}
+      {% endpaginate %}
     {% else %}
       <div class="empty-state">
         <div class="empty-state__icon">
@@ -51,7 +70,9 @@
         </div>
         <h3 class="empty-state__title">No products found</h3>
         <p class="empty-state__text">Try adjusting your filters or search terms.</p>
-        <a href="{{ collection.url }}" class="btn btn-primary">Clear filters</a>
+        {% if active_collection != blank %}
+          <a href="{{ active_collection.url }}" class="btn btn-primary">View collection</a>
+        {% endif %}
       </div>
     {% endif %}
   </div>
@@ -187,6 +208,20 @@
 {
   "name": "Collection products",
   "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "default": 12
+    },
     {
       "type": "text",
       "id": "button_text",

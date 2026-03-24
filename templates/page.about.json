@@ -9,19 +9,106 @@
         "cta_link": "shopify://collections/all"
       }
     },
+    "about_content": {
+      "type": "about-page",
+      "blocks": {
+        "story": {
+          "type": "image_text",
+          "settings": {
+            "image_side": "left",
+            "eyebrow": "Our Story",
+            "heading": "Building for the next generation of digital creators",
+            "text": "<p>We started with a simple belief: selling digital products should feel as polished as the products themselves. This theme is a reflection of that commitment — clean code, purposeful design, and a storefront built to convert.<\\/p>",
+            "cta_text": "Browse products",
+            "cta_link": "shopify://collections/all"
+          }
+        },
+        "stats_row": {
+          "type": "stats",
+          "settings": {
+            "heading": "",
+            "stat_1_value": "10k+",
+            "stat_1_label": "Happy customers",
+            "stat_2_value": "50+",
+            "stat_2_label": "Digital products",
+            "stat_3_value": "99%",
+            "stat_3_label": "Satisfaction rate",
+            "stat_4_value": "24/7",
+            "stat_4_label": "Download access"
+          }
+        },
+        "member_1": {
+          "type": "team_member",
+          "settings": {
+            "name": "Alex Rivera",
+            "role": "Founder & Designer",
+            "bio": "Builds digital-first commerce experiences. Passionate about clean UX and fast stores."
+          }
+        },
+        "member_2": {
+          "type": "team_member",
+          "settings": {
+            "name": "Jordan Lee",
+            "role": "Lead Developer",
+            "bio": "Full-stack developer focused on Shopify themes, app integrations, and storefront performance."
+          }
+        },
+        "member_3": {
+          "type": "team_member",
+          "settings": {
+            "name": "Sam Chen",
+            "role": "Product Strategist",
+            "bio": "Turns customer insights into product decisions. Loves data and great copy."
+          }
+        },
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "section_heading": "Frequently asked questions",
+            "question": "What formats do your digital products come in?",
+            "answer": "<p>Products are available as PDF, EPUB, and ZIP bundles depending on the type. All downloads are delivered instantly after purchase.<\\/p>"
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "section_heading": "",
+            "question": "Do I need an account to download after purchase?",
+            "answer": "<p>No account required. A download link is sent to your email immediately after checkout and remains valid for 30 days.<\\/p>"
+          }
+        },
+        "faq_3": {
+          "type": "faq_item",
+          "settings": {
+            "section_heading": "",
+            "question": "Can I use the products for commercial projects?",
+            "answer": "<p>Yes — all products include a standard commercial license unless otherwise noted on the product page.<\\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "story",
+        "stats_row",
+        "member_1",
+        "member_2",
+        "member_3",
+        "faq_1",
+        "faq_2",
+        "faq_3"
+      ],
+      "settings": {}
+    },
     "main": {
       "type": "main-page",
       "settings": {
         "show_page_title": false,
-        "intro_text": "<p>Share your story, mission, and the problem your digital products solve.<\/p>"
+        "intro_text": "<p>Share your story, mission, and the problem your digital products solve.<\\/p>"
       }
     }
   },
   "order": [
     "hero",
+    "about_content",
     "main"
   ]
 }
-
-
-

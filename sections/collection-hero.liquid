@@ -1,25 +1,35 @@
+{% liquid
+  assign active_collection = collection
+  if active_collection == blank and section.settings.collection != blank
+    assign active_collection = section.settings.collection
+  endif
+  if active_collection == blank
+    assign active_collection = collections['all']
+  endif
+%}
+
 <section class="collection-hero" style="{% if section.settings.bg_color != blank %}background-color: {{ section.settings.bg_color }};{% endif %}">
   <div class="container collection-hero__inner">
     <div class="collection-hero__content">
-      <h1 class="collection-hero__title">{{ collection.title }}</h1>
+      <h1 class="collection-hero__title">{{ active_collection.title | default: page.title }}</h1>
       
-      {% if collection.description != blank %}
+      {% if active_collection.description != blank %}
         <div class="collection-hero__description rte">
-          {{ collection.description }}
+          {{ active_collection.description }}
         </div>
       {% endif %}
 
-      {% if section.settings.show_count %}
+      {% if section.settings.show_count and active_collection != blank %}
         <p class="collection-hero__count">
-          {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
+          {{ active_collection.products_count }} {{ active_collection.products_count | pluralize: 'product', 'products' }}
         </p>
       {% endif %}
     </div>
 
-    {% if section.settings.hero_image != blank %}
+    {% if section.settings.hero_image != blank or active_collection.image != blank %}
       <div class="collection-hero__image">
-        {{ section.settings.hero_image | image_url: width: 500 | image_tag: 
-          alt: collection.title, 
+        {{ section.settings.hero_image | default: active_collection.image | image_url: width: 500 | image_tag: 
+          alt: active_collection.title, 
           loading: 'eager',
           sizes: "(max-width: 768px) 100vw, 500px"
         }}
@@ -103,6 +113,11 @@
 {
   "name": "Collection hero",
   "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
     {
       "type": "image_picker",
       "id": "hero_image",
