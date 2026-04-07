@@ -22,6 +22,18 @@
   <body>
     <a class="skip-link" href="#MainContent">Skip to content</a>
 
+    {% if request.page_type == 'index' %}
+      <div class="demo-toast" role="status" aria-live="polite" data-demo-toast>
+        <div class="demo-toast__content">
+          <p class="demo-toast__title">Demo Site Notice</p>
+          <p class="demo-toast__text">This storefront is a public demo built to showcase Shopify development work.</p>
+        </div>
+        <button class="demo-toast__close" type="button" aria-label="Dismiss demo notice" data-demo-toast-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endif %}
+
     {% section 'header' %}
 
     <main id="MainContent" role="main" tabindex="-1">
